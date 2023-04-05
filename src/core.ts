@@ -1,11 +1,11 @@
 /**
  * Individual expence
  * @property person Person who made the expence
- * @property price Amount of money spent
+ * @property amount Amount of money spent
  */
 export interface IExpense {
   person: string;
-  price: number;
+  amount: number;
 }
 
 /**
@@ -26,31 +26,45 @@ export interface IPayment {
  * @returns Array of payments
  */
 export function splitCost(expences: IExpense[]) {
-  const sortedExpenses = expences.sort((a, b) => a.price - b.price);
+  const totalExpence = expences.reduce((acc, cur) => acc + cur.amount, 0);
+  const perPersonExpence = totalExpence / expences.length;
+
+  // negative amount means the person has to pay
+  // positive amount means the person has to receive
+  const sortedDebts: IExpense[] = expences
+    .map((expence) => ({
+      person: expence.person,
+      amount: expence.amount - perPersonExpence,
+    }))
+    .sort((a, b) => a.amount - b.amount);
+
   const payments: IPayment[] = [];
 
   let head = 0;
-  let tail = sortedExpenses.length - 1;
+  let tail = sortedDebts.length - 1;
 
-  while (head !== tail) {
-    const headExpense = sortedExpenses[head];
-    const tailExpense = sortedExpenses[tail];
-    const amount = Math.min(headExpense.price, -tailExpense.price);
+  while (head < tail) {
+    const headExpense = sortedDebts[head];
+    const tailExpense = sortedDebts[tail];
+    const owned = Math.min(
+      Math.abs(headExpense.amount),
+      Math.abs(tailExpense.amount)
+    );
 
     payments.push({
       from: headExpense.person,
       to: tailExpense.person,
-      amount,
+      amount: owned,
     });
 
-    headExpense.price -= amount;
-    tailExpense.price += amount;
+    headExpense.amount += owned;
+    tailExpense.amount -= owned;
 
-    if (headExpense.price === 0) {
+    if (headExpense.amount === 0) {
       head++;
     }
 
-    if (tailExpense.price === 0) {
+    if (tailExpense.amount === 0) {
       tail--;
     }
   }
