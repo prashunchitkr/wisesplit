@@ -1,5 +1,13 @@
+import { ExpenseContainer } from "@/components/ExpenseContainer.component";
+import { PaymentDetails } from "@/components/PaymentDetails.component";
+
 function App() {
-  return <div>Hello World</div>;
+  return (
+    <div>
+      <ExpenseContainer />
+      <PaymentDetails expenses={[]} />
+    </div>
+  );
 }
 
 export default App;
