@@ -1,11 +1,11 @@
-import { ExpenseContainer } from "@/components/ExpenseContainer.component";
-import { PaymentDetails } from "@/components/PaymentDetails.component";
+import { ExpenseContainer } from "@/components/Expense";
+import { PaymentDetails } from "@/components/Payment";
 
 function App() {
   return (
-    <div>
+    <div className="container w-1/4 mx-auto">
       <ExpenseContainer />
-      <PaymentDetails expenses={[]} />
+      <PaymentDetails />
     </div>
   );
 }
