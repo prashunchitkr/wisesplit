@@ -10,6 +10,7 @@ interface IExpenseStoreActions {
   addExpense: (expense: IExpense) => void;
   removeExpense: (person: string) => void;
   updateExpense: (expense: IExpense) => void;
+  reset: () => void;
 }
 
 export const useExpenseStore = create<
@@ -20,7 +21,7 @@ export const useExpenseStore = create<
 
   addExpense: (expense: IExpense) => {
     set((state) => {
-      const expenses = [...state.expenses, expense];
+      const expenses = state.expenses.concat(expense);
       return { expenses, payments: splitCost(expenses) };
     });
   },
@@ -42,5 +43,9 @@ export const useExpenseStore = create<
       });
       return { expenses };
     });
+  },
+
+  reset: () => {
+    set({ expenses: [], payments: [] });
   },
 }));
