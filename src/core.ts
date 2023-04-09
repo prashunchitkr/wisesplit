@@ -4,6 +4,7 @@
  * @property amount Amount of money spent
  */
 export interface IExpense {
+  id: string;
   person: string;
   amount: number;
 }
@@ -15,6 +16,7 @@ export interface IExpense {
  * @property amount Amount of money to be paid
  */
 export interface IPayment {
+  id: string;
   from: string;
   to: string;
   amount: number;
@@ -31,7 +33,7 @@ export function splitCost(expences: IExpense[]) {
 
   // negative amount means the person has to pay
   // positive amount means the person has to receive
-  const sortedDebts: IExpense[] = expences
+  const sortedDebts = expences
     .map((expence) => ({
       person: expence.person,
       amount: expence.amount - perPersonExpence,
@@ -52,6 +54,7 @@ export function splitCost(expences: IExpense[]) {
     );
 
     payments.push({
+      id: crypto.randomUUID(),
       from: headExpense.person,
       to: tailExpense.person,
       amount: owned,
